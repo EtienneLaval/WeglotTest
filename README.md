@@ -101,7 +101,7 @@ Si vous pensez que des modifications sont utiles
 - Ces bouts de codes fictifs n'ont rien à voir les uns avec les autres
 - Ne vous attardez pas sur des détails, comme le naming, qui ne nous intéressent pas ici
 
-1. 
+1.
 
 ```js
 const data = [
@@ -110,31 +110,45 @@ const data = [
   { value: "3", label: "Three" },
 ];
 
-const values = data.reduce((values, { value }) => {
+const values = data.reduce((values, { value }) => { // using a map function would be simpler
   values.push(value);
   return values;
 }, []);
 ```
+Suggestion:
+```js
+const values = data.map(element => element.value);
+```
 
-2. 
+2.
 
 ```js
 async function getIndexes() {
    return await fetch('https://api.coingecko.com/api/v3/indexes').then(res => res.json());
-}
 
 async function analyzeIndexes() {
-   const indexes = await getIndexes().catch(_ => {
+   const indexes = await getIndexes().catch(_ => { // I find it more readable tu use try-catch wih async-await
       throw new Error('Unable to fetch indexes');
    });
    return indexes;
 }
 ```
+Suggestion
+```js
+async function analyzeIndexes() {
+   try {
+      return await getIndexes()
+   }
+   catch(_) {
+      throw new Error('Unable to fetch indexes');
+   }
+}
+```
 
-3. 
+3.
 
 ```js
-let state;
+let state; // since state isn't redefined, you can afford to use a const here and remove the else condition
 const user = getUser();
 if (user) {
    const project = getProject(user.id);
@@ -150,33 +164,66 @@ if (user) {
 }
 ctx.body = state;
 ```
+Suggestion
+```js
+const state = {
+      user: null,
+      project: null
+   };
+const user = getUser();
+if (user) {
+   const project = getProject(user.id);
+   state = {
+      user,
+      project
+   };
+}
+ctx.body = state
+```
 
-4. 
+
+4.
 
 ```js
 function getQueryProvider() {
   const url = window.location.href;
-  const [_, provider] = url.match(/provider=([^&]*)/);
+  const [_, provider] = url.match(/provider=([^&]*)/); // is the regexp match returns null, it is not decomposable. However if it is an array, you can return its second element anyway, weather defined or not, you'd still have the same function
   if (provider) {
      return provider;
   }
   return;
 }
 ```
+Suggestion
+```js
+function getQueryProvider() {
+  const url = window.location.href;
+  const matchingProviders = url.match(/provider=([^&]*)/);
+  if (matchingProviders) {
+     return matchingProviders[1];
+  }
+}
+```
 
-5. 
+5.
 
 ```js
 function getParagraphTexts() {
    const texts = [];
-   document.querySelectorAll("p").forEach(p => {
+   document.querySelectorAll("p").forEach(p => { // If it is legit to quote some sources found on the net, I've found the following link this on the topic, so basically in a IE free environment, you can use Array.from() (https://gomakethings.com/converting-a-nodelist-to-an-array-with-vanilla-javascript/)
       texts.push(p);
    });
    return texts;
 }
 ```
+Suggestion
+```js
+function getParagraphTexts() {
+   return Array.from(document.querySelectorAll("p"))
+}
+```
 
-6. 
+6.
 
 ```js
 function Employee({ id }) {
@@ -184,7 +231,7 @@ function Employee({ id }) {
    const [loading, setLoading] = useState(true);
    const [employee, setEmployee] = useState({});
 
-   useEffect(() => {
+   useEffect(() => { // I don't know how this state system is supposed to work, but it seems like it could deserve some asynchronous support.
       getEmployee(id)
          .then(employee => {
             setEmployee(employee);
@@ -204,7 +251,7 @@ function Employee({ id }) {
       return <Loading />;
    }
 
-   return (
+   return ( // It could be done using a loop of some sort, and some verification on undefined values (cf suggestion if it suits yor taste).
       <Table>
          <Row>
             <Cell>{employee.firstName}</Cell>
@@ -219,8 +266,24 @@ function Employee({ id }) {
    );
 }
 ```
+Suggestion
+```js
+const displayableEmployeeProperties=["firstName", "lastName", "position", "project", "salary", "yearHired", "wololo"]
+return `
+   <Table>
+      <Row>
+         ${displayableEmployeeProperties.reduce((acc, property) => {
+            if (employe.hasOwnProperty(property)){
+               acc.concat(`<Cell>${employee[property]}</Cell>\n`)
+            }
+            return acc
+         },"")}
+      </Row>
+   </Table>
+   `
+```
 
-7. 
+7.
 
 ```js
 async function getFilledIndexes() {
@@ -229,8 +292,8 @@ async function getFilledIndexes() {
       const indexes = await getIndexes();
       const status = await getStatus();
       const usersId = await getUsersId();
-      
-      for (let index of indexes) {
+
+      for (let index of indexes) { // assumig indexes is an array, you can use a filter
          if (index.status === status.filled && usersId.includes(index.userId)) {
             filledIndexes.push(index);
          }
@@ -241,15 +304,19 @@ async function getFilledIndexes() {
    }
 }
 ```
+Suggestion
+```js
+const filledIndexes = indexdes.filter(index =>  (index.status === status.filled && usersId.includes(index.userId)) )
+```
 
-8. 
+8.
 
 ```js
 function getUserSettings(user) {
    if (user) {
       const project = getProject(user.id);
       if (project) {
-         const settings = getSettings(project.id);
+         const settings = getSettings(project.id); // it's a bit heavy but without further context, a bit hard to improve, multiple condition could call for return first or ternaries but right here it would only make the expression more heavy... so I'm a bit dry on this one
          if (settings) {
             return settings;
          }
