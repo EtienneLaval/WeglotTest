@@ -1,3 +1,16 @@
+# Guide d'utilisation
+
+## Instalation
+
+## lancer le programme
+
+## lancer les tests
+
+# Démarche
+
+Vu que les fichiers data sont donnés comme etant à utiliser pour les tests, j'en ai déduit que le run du programme ne se faisait pas dessus. J'ai donc choisi un couple input-output à la racine pour les cas d'utilisation de base. Il ne faut donc y voir qu'un choix d'interprétation
+J'immagine qu'avec un tri des horraires d'entrée j'aurai pu effectuer un algorithme plus efficace, mais l'idée était plus d'avoir une construction lisible
+
 The first rule is, **do not** fork this repo, clone it or use it as template.
 
 The second rule is, **do not** fork this repo, clone it or use it as template.
@@ -33,10 +46,10 @@ créneaux indisponibles y sont inclus.
 Une ligne au format `d hh:mm-hh:mm` correspondant à l'horaire de réunion trouvé.
 Il doit être:
 
-- en intersection avec aucun créneau d'indisponibilité d'un collègue
-- pendant les horaires de travail, sans dépasser
-- d'une durée exacte de 60 minutes, début et fin incluses (eg. 14:00-14:59)
-- la première solution possible s'il en existe plusieurs
+-   en intersection avec aucun créneau d'indisponibilité d'un collègue
+-   pendant les horaires de travail, sans dépasser
+-   d'une durée exacte de 60 minutes, début et fin incluses (eg. 14:00-14:59)
+-   la première solution possible s'il en existe plusieurs
 
 **Exemple**
 
@@ -90,34 +103,38 @@ envoyez nous le lien de ce repo, avec l'accès si nécessaire.
 Passez en revue le code ci dessous
 
 Si vous pensez que des modifications sont utiles
+
 1. écrivez un commentaire comme pendant une review de pull request
 2. puis écrivez le code comme vous l'imagineriez
 
 **NB**
 
-- Faites ces reviews comme bon vous semble, tout n'est pas à commenter
-- Ne commentez pas le style (indentation, trailing comma, etc.)
-- Admettez que le code fonctionne
-- Ces bouts de codes fictifs n'ont rien à voir les uns avec les autres
-- Ne vous attardez pas sur des détails, comme le naming, qui ne nous intéressent pas ici
+-   Faites ces reviews comme bon vous semble, tout n'est pas à commenter
+-   Ne commentez pas le style (indentation, trailing comma, etc.)
+-   Admettez que le code fonctionne
+-   Ces bouts de codes fictifs n'ont rien à voir les uns avec les autres
+-   Ne vous attardez pas sur des détails, comme le naming, qui ne nous intéressent pas ici
 
 1.
 
 ```js
 const data = [
-  { value: "1", label: "One" },
-  { value: "2", label: "Two" },
-  { value: "3", label: "Three" },
-];
+    { value: '1', label: 'One' },
+    { value: '2', label: 'Two' },
+    { value: '3', label: 'Three' },
+]
 
-const values = data.reduce((values, { value }) => { // using a map function would be simpler
-  values.push(value);
-  return values;
-}, []);
+const values = data.reduce((values, { value }) => {
+    // using a map function would be simpler
+    values.push(value)
+    return values
+}, [])
 ```
+
 Suggestion:
+
 ```js
-const values = data.map(element => element.value);
+const values = data.map((element) => element.value)
 ```
 
 2.
@@ -133,75 +150,79 @@ async function analyzeIndexes() {
    return indexes;
 }
 ```
+
 Suggestion
+
 ```js
 async function analyzeIndexes() {
-   try {
-      return await getIndexes()
-   }
-   catch(_) {
-      throw new Error('Unable to fetch indexes');
-   }
+    try {
+        return await getIndexes()
+    } catch (_) {
+        throw new Error('Unable to fetch indexes')
+    }
 }
 ```
 
 3.
 
 ```js
-let state; // since state isn't redefined, you can afford to use a const here and remove the else condition
-const user = getUser();
+let state // since state isn't redefined, you can afford to use a const here and remove the else condition
+const user = getUser()
 if (user) {
-   const project = getProject(user.id);
-   state = {
-      user,
-      project
-   };
+    const project = getProject(user.id)
+    state = {
+        user,
+        project,
+    }
 } else {
-   state = {
-      user: null,
-      project: null
-   };
-}
-ctx.body = state;
-```
-Suggestion
-```js
-const state = {
-      user: null,
-      project: null
-   };
-const user = getUser();
-if (user) {
-   const project = getProject(user.id);
-   state = {
-      user,
-      project
-   };
+    state = {
+        user: null,
+        project: null,
+    }
 }
 ctx.body = state
 ```
 
+Suggestion
+
+```js
+const state = {
+    user: null,
+    project: null,
+}
+const user = getUser()
+if (user) {
+    const project = getProject(user.id)
+    state = {
+        user,
+        project,
+    }
+}
+ctx.body = state
+```
 
 4.
 
 ```js
 function getQueryProvider() {
-  const url = window.location.href;
-  const [_, provider] = url.match(/provider=([^&]*)/); // is the regexp match returns null, it is not decomposable. However if it is an array, you can return its second element anyway, weather defined or not, you'd still have the same function
-  if (provider) {
-     return provider;
-  }
-  return;
+    const url = window.location.href
+    const [_, provider] = url.match(/provider=([^&]*)/) // is the regexp match returns null, it is not decomposable. However if it is an array, you can return its second element anyway, weather defined or not, you'd still have the same function
+    if (provider) {
+        return provider
+    }
+    return
 }
 ```
+
 Suggestion
+
 ```js
 function getQueryProvider() {
-  const url = window.location.href;
-  const matchingProviders = url.match(/provider=([^&]*)/);
-  if (matchingProviders) {
-     return matchingProviders[1];
-  }
+    const url = window.location.href
+    const matchingProviders = url.match(/provider=([^&]*)/)
+    if (matchingProviders) {
+        return matchingProviders[1]
+    }
 }
 ```
 
@@ -209,17 +230,20 @@ function getQueryProvider() {
 
 ```js
 function getParagraphTexts() {
-   const texts = [];
-   document.querySelectorAll("p").forEach(p => { // If it is legit to quote some sources found on the net, I've found the following link this on the topic, so basically in a IE free environment, you can use Array.from() (https://gomakethings.com/converting-a-nodelist-to-an-array-with-vanilla-javascript/)
-      texts.push(p);
-   });
-   return texts;
+    const texts = []
+    document.querySelectorAll('p').forEach((p) => {
+        // If it is legit to quote some sources found on the net, I've found the following link this on the topic, so basically in a IE free environment, you can use Array.from() (https://gomakethings.com/converting-a-nodelist-to-an-array-with-vanilla-javascript/)
+        texts.push(p)
+    })
+    return texts
 }
 ```
+
 Suggestion
+
 ```js
 function getParagraphTexts() {
-   return Array.from(document.querySelectorAll("p"))
+    return Array.from(document.querySelectorAll('p'))
 }
 ```
 
@@ -227,57 +251,61 @@ function getParagraphTexts() {
 
 ```js
 function Employee({ id }) {
-   const [error, setError] = useState(null);
-   const [loading, setLoading] = useState(true);
-   const [employee, setEmployee] = useState({});
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [employee, setEmployee] = useState({})
 
-   useEffect(() => { // I don't know how this state system is supposed to work, but it seems like it could deserve some asynchronous support.
-      getEmployee(id)
-         .then(employee => {
-            setEmployee(employee);
-            setLoading(false);
-         })
-         .catch(_ => {
-            setError('Unable to fetch employee');
-            setLoading(false);
-         });
-   }, [id]);
+    useEffect(() => {
+        // I don't know how this state system is supposed to work, but it seems like it could deserve some asynchronous support.
+        getEmployee(id)
+            .then((employee) => {
+                setEmployee(employee)
+                setLoading(false)
+            })
+            .catch((_) => {
+                setError('Unable to fetch employee')
+                setLoading(false)
+            })
+    }, [id])
 
-   if (error) {
-      return <Error />;
-   }
+    if (error) {
+        return <Error />
+    }
 
-   if (loading) {
-      return <Loading />;
-   }
+    if (loading) {
+        return <Loading />
+    }
 
-   return ( // It could be done using a loop of some sort, and some verification on undefined values (cf suggestion if it suits yor taste).
-      <Table>
-         <Row>
-            <Cell>{employee.firstName}</Cell>
-            <Cell>{employee.lastName}</Cell>
-            <Cell>{employee.position}</Cell>
-            <Cell>{employee.project}</Cell>
-            <Cell>{employee.salary}</Cell>
-            <Cell>{employee.yearHired}</Cell>
-            <Cell>{employee.wololo}</Cell>
-         </Row>
-      </Table>
-   );
+    return (
+        // It could be done using a loop of some sort, and some verification on undefined values (cf suggestion if it suits yor taste).
+        <Table>
+            <Row>
+                <Cell>{employee.firstName}</Cell>
+                <Cell>{employee.lastName}</Cell>
+                <Cell>{employee.position}</Cell>
+                <Cell>{employee.project}</Cell>
+                <Cell>{employee.salary}</Cell>
+                <Cell>{employee.yearHired}</Cell>
+                <Cell>{employee.wololo}</Cell>
+            </Row>
+        </Table>
+    )
 }
 ```
+
 Suggestion
+
 ```js
-const displayableEmployeeProperties=["firstName", "lastName", "position", "project", "salary", "yearHired", "wololo"]
+const displayableEmployeeProperties = ['firstName', 'lastName', 'position', 'project', 'salary', 'yearHired', 'wololo']
 return `
    <Table>
       <Row>
          ${displayableEmployeeProperties.reduce((acc, property) => {
-            if (employe.hasOwnProperty(property)){
-               acc.concat(`<Cell>${employee[property]}</Cell>\n`)
-            }
-            return acc
-         },"")}
+             if (employe.hasOwnProperty(property)) {
+                 acc.concat(`<Cell>${employee[property]}</Cell>\n`)
+             }
+             return acc
+         }, '')}
       </Row>
    </Table>
    `
@@ -287,41 +315,44 @@ return `
 
 ```js
 async function getFilledIndexes() {
-   try {
-      const filledIndexes = [];
-      const indexes = await getIndexes();
-      const status = await getStatus();
-      const usersId = await getUsersId();
+    try {
+        const filledIndexes = []
+        const indexes = await getIndexes()
+        const status = await getStatus()
+        const usersId = await getUsersId()
 
-      for (let index of indexes) { // assumig indexes is an array, you can use a filter
-         if (index.status === status.filled && usersId.includes(index.userId)) {
-            filledIndexes.push(index);
-         }
-      }
-      return filledIndexes;
-   } catch(_) {
-      throw new Error ('Unable to get indexes');
-   }
+        for (let index of indexes) {
+            // assumig indexes is an array, you can use a filter
+            if (index.status === status.filled && usersId.includes(index.userId)) {
+                filledIndexes.push(index)
+            }
+        }
+        return filledIndexes
+    } catch (_) {
+        throw new Error('Unable to get indexes')
+    }
 }
 ```
+
 Suggestion
+
 ```js
-const filledIndexes = indexdes.filter(index =>  (index.status === status.filled && usersId.includes(index.userId)) )
+const filledIndexes = indexdes.filter((index) => index.status === status.filled && usersId.includes(index.userId))
 ```
 
 8.
 
 ```js
 function getUserSettings(user) {
-   if (user) {
-      const project = getProject(user.id);
-      if (project) {
-         const settings = getSettings(project.id); // it's a bit heavy but without further context, a bit hard to improve, multiple condition could call for return first or ternaries but right here it would only make the expression more heavy... so I'm a bit dry on this one
-         if (settings) {
-            return settings;
-         }
-      }
-   }
-   return {};
+    if (user) {
+        const project = getProject(user.id)
+        if (project) {
+            const settings = getSettings(project.id) // it's a bit heavy but without further context, a bit hard to improve, multiple condition could call for return first or ternaries but right here it would only make the expression more heavy... so I'm a bit dry on this one
+            if (settings) {
+                return settings
+            }
+        }
+    }
+    return {}
 }
 ```
