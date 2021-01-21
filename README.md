@@ -2,14 +2,28 @@
 
 ## Instalation
 
-## lancer le programme
+lancer $npm install
+copier input.exemple.txt dans input.txt
+copier config.exemple.js dans config.js
 
-## lancer les tests
+## Lancer le programme
+
+lancer $npm run start
+modifier au besoin les fichiers d'input et de configuration
+
+## Lancer les tests
+
+lancer $npm run start
 
 # Démarche
 
-Vu que les fichiers data sont donnés comme etant à utiliser pour les tests, j'en ai déduit que le run du programme ne se faisait pas dessus. J'ai donc choisi un couple input-output à la racine pour les cas d'utilisation de base. Il ne faut donc y voir qu'un choix d'interprétation
-J'immagine qu'avec un tri des horraires d'entrée j'aurai pu effectuer un algorithme plus efficace, mais l'idée était plus d'avoir une construction lisible
+Vu que les fichiers data sont donnés comme étant à utiliser pour les tests, j'en ai déduit que le run du programme ne se faisait pas dessus. J'ai donc choisi un couple input-output à la racine pour les cas d'utilisation de base. Il ne faut donc y voir qu'un choix d'interprétation.
+
+J'ai tenté une approche triviale pour maximiser la clareté du code. Malgré tout (pour des soucis de manque de temps avant tout), il rest 2 grosse fonctions centrales et monolythiques qui méritentplus de découpages. A ceci s'ajoute que la trivialité n'était peut être pas la bienvenue et que mon naming porte peut être encore les traces de débug long et fastidieux, j'espère avoir gommé les principale incohérences.
+
+Je n'étais pas certain de ce qui était attendu pour la config de CI censée s'éxécuter sur le repo (une config Jenkins? des Github Actions?), j'ai opté pour des test automatisés en local avant commit avec husky/lint-staged.
+
+# Démarche
 
 The first rule is, **do not** fork this repo, clone it or use it as template.
 
